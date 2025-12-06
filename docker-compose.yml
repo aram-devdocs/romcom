@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # Main Node.js server - Express + WebSocket signaling
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - ROM_PATH=${ROM_PATH:-/roms/game.z64}
+      - MUPEN_PLUGIN_PATH=${MUPEN_PLUGIN_PATH:-/usr/lib/mupen64plus}
+      - PION_URL=http://webrtc:8080
+      - PION_RTP_HOST=webrtc
+      - PION_RTP_PORT=5004
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    volumes:
+      - ./roms:/roms:ro
+      - ./server/savestates:/savestates
+    depends_on:
+      - webrtc
+    networks:
+      - n64net
+    restart: unless-stopped
+
+  # Pion WebRTC server - handles media streaming
+  webrtc:
+    build:
+      context: ./server/webrtc
+      dockerfile: Dockerfile
+    ports:
+      - "${PION_HTTP_PORT:-8080}:8080"
+      - "${PION_RTP_PORT:-5004}:5004/udp"
+    environment:
+      - STUN_SERVER=${STUN_SERVER:-stun:stun.l.google.com:19302}
+      - RTP_PORT=5004
+      - HTTP_PORT=8080
+    networks:
+      - n64net
+    restart: unless-stopped
+
+  # Nginx reverse proxy (optional, for production)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./client:/usr/share/nginx/html:ro
+    depends_on:
+      - server
+      - webrtc
+    networks:
+      - n64net
+    profiles:
+      - production
+
+networks:
+  n64net:
+    driver: bridge
