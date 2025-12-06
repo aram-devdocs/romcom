@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  # Main Node.js server - Express + WebSocket signaling
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - ROM_PATH=${ROM_PATH:-/roms/game.z64}
+      - MUPEN_PLUGIN_PATH=/usr/lib/mupen64plus
+      - PION_URL=http://webrtc:8080
+      - PION_RTP_HOST=webrtc
+      - PION_RTP_PORT=5004
+      - STUN_SERVER=${STUN_SERVER:-stun:stun.l.google.com:19302}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - VIDEO_WIDTH=${VIDEO_WIDTH:-640}
+      - VIDEO_HEIGHT=${VIDEO_HEIGHT:-480}
+      - VIDEO_FRAMERATE=${VIDEO_FRAMERATE:-60}
+      - VIDEO_BITRATE=${VIDEO_BITRATE:-2M}
+    volumes:
+      - ./roms:/roms:ro
+      - n64-savestates:/savestates
+    depends_on:
+      - webrtc
+    networks:
+      - n64net
+    restart: unless-stopped
+
+  # Pion WebRTC server - handles media streaming
+  webrtc:
+    build:
+      context: ./services/webrtc
+      dockerfile: Dockerfile
+    ports:
+      - "${PION_HTTP_PORT:-8080}:8080"
+      - "${PION_RTP_PORT:-5004}:5004/udp"
+    environment:
+      - STUN_SERVER=${STUN_SERVER:-stun:stun.l.google.com:19302}
+      - RTP_PORT=5004
+      - HTTP_PORT=8080
+    networks:
+      - n64net
+    restart: unless-stopped
+
+  # Nginx reverse proxy for production
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+      - webrtc
+    networks:
+      - n64net
+    restart: unless-stopped
+    profiles:
+      - production
+
+volumes:
+  n64-savestates:
+
+networks:
+  n64net:
+    driver: bridge

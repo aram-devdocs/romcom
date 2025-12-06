@@ -1,0 +1,1 @@
+{"root":["./src/App.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/ConnectionOverlay.tsx","./src/components/Controls.tsx","./src/components/StatusBar.tsx","./src/components/VideoPlayer.tsx","./src/hooks/useWebRTC.ts","./src/hooks/useWebSocket.ts"],"errors":true,"version":"5.9.3"}

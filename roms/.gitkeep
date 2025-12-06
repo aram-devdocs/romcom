@@ -1,0 +1,7 @@
+# Place your N64 ROM files here
+# Supported formats: .z64, .n64, .v64
+#
+# Configure the ROM to use in .env:
+#   ROM_PATH=/roms/your-game.z64
+#
+# Note: ROM files are gitignored to avoid committing copyrighted material
