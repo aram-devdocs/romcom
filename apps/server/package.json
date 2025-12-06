@@ -1,0 +1,40 @@
+{
+  "name": "@n64-stream/server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "N64 Stream Server - Express + WebSocket signaling server",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@n64-stream/shared": "workspace:*",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "pino": "^8.17.0",
+    "pino-pretty": "^10.3.0",
+    "ws": "^8.14.2",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.0",
+    "@types/ws": "^8.5.10",
+    "eslint": "^9.15.0",
+    "eslint-config-prettier": "^9.1.0",
+    "tsx": "^4.6.2",
+    "typescript": "^5.3.2",
+    "typescript-eslint": "^8.15.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

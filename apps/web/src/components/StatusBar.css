@@ -1,0 +1,119 @@
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #a0a0a0;
+  flex-wrap: wrap;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-label {
+  color: #666;
+}
+
+.status-value {
+  color: #e0e0e0;
+  font-weight: 500;
+}
+
+.status-divider {
+  width: 1px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Status indicator */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #666;
+}
+
+.status-idle .status-dot {
+  background: #666;
+}
+
+.status-loading .status-dot {
+  background: #fbbf24;
+  animation: pulse 1s infinite;
+}
+
+.status-playing .status-dot {
+  background: #4ade80;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+}
+
+.status-paused .status-dot {
+  background: #fbbf24;
+}
+
+.status-error .status-dot {
+  background: #f87171;
+}
+
+/* Connection status */
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.connection-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.connection-status.connected .connection-dot {
+  background: #4ade80;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+}
+
+.connection-status.disconnected .connection-dot {
+  background: #f87171;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (max-width: 640px) {
+  .status-bar {
+    gap: 12px;
+    padding: 10px 16px;
+    font-size: 0.8rem;
+  }
+
+  .status-divider {
+    display: none;
+  }
+
+  .game-name {
+    width: 100%;
+    justify-content: center;
+  }
+}

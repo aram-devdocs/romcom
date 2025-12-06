@@ -1,0 +1,24 @@
+version: '3.8'
+
+# Development compose file - use with: docker compose -f docker-compose.dev.yml up
+
+services:
+  # Pion WebRTC server only - for local development
+  webrtc:
+    build:
+      context: ./services/webrtc
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "5004:5004/udp"
+    environment:
+      - STUN_SERVER=stun:stun.l.google.com:19302
+      - RTP_PORT=5004
+      - HTTP_PORT=8080
+    networks:
+      - n64net
+    restart: unless-stopped
+
+networks:
+  n64net:
+    driver: bridge
